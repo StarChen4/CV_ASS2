@@ -43,12 +43,12 @@ class DomainNetDataset(Dataset):
 
 # Define the transformations to be applied to the images
 transform = transforms.Compose([
-    # transforms.RandomRotation(degrees=15),  # Randomly rotate the image by +/-15 degrees
-    # transforms.RandomHorizontalFlip(),  # Randomly flip the image horizontally with a probability of 0.5
-    # transforms.RandomVerticalFlip(),  # Randomly flip the image vertically with a probability of 0.5
-    # transforms.ColorJitter(brightness=0.4, contrast=0.4, saturation=0.4, hue=0.1),  # Apply color jittering
-    # transforms.RandomGrayscale(p=0.1),  # Randomly convert the image to grayscale with a probability of 0.1
-    # transforms.GaussianBlur(kernel_size=3, sigma=(0.1, 2.0)),  # Apply Gaussian blur with a random sigma in 0.1 and 2.0
+    transforms.RandomRotation(degrees=15),  # Randomly rotate the image by +/-15 degrees
+    transforms.RandomHorizontalFlip(),  # Randomly flip the image horizontally with a probability of 0.5
+    transforms.RandomVerticalFlip(),  # Randomly flip the image vertically with a probability of 0.5
+    transforms.ColorJitter(brightness=0.4, contrast=0.4, saturation=0.4, hue=0.1),  # Apply color jittering
+    transforms.RandomGrayscale(p=0.1),  # Randomly convert the image to grayscale with a probability of 0.1
+    transforms.GaussianBlur(kernel_size=3, sigma=(0.1, 2.0)),  # Apply Gaussian blur with a random sigma in 0.1 and 2.0
     transforms.Resize((224, 224)),  # Resize the image to 224x224 pixels
     transforms.ToTensor(),  # Convert the image to a PyTorch tensor
     transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])  # Normalize the image
@@ -89,9 +89,10 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 resnet34 = resnet34.to(device)
 
+
 # Train Loop
 def train(dataloader, model, loss_fn, optimizer, device, epoch):
-    # model.train()
+    model.train()  # enter training mode
     running_loss = 0.0
     total_loss = 0.0
     # Get a batch of training data from the DataLoader
@@ -131,6 +132,8 @@ def train(dataloader, model, loss_fn, optimizer, device, epoch):
 
 # Evaluation Loop
 def test(dataloader, model, loss_fn, device):
+    # Enter evaluating mode
+    model.eval()
     # Get number of batches
     num_batches = len(dataloader)
 
@@ -164,6 +167,7 @@ def test(dataloader, model, loss_fn, device):
     print("Test Error: \n Accuracy: {:.2f}, Avg loss: {:.4f} \n".format(100 * accuracy, test_loss))
 
     return test_loss, accuracy
+
 
 # hyperparameters
 learning_rate = 0.001
